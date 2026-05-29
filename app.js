@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupCommandRunner();
     setupDragDropInstaller();
     setupPricingSwitcher();
+    setupGatekeeperTabs();
 });
 
 // 1. Theme Toggle Management (Apple Light vs Minimal Dark)
@@ -143,7 +144,7 @@ function setupCommandRunner() {
         "  [nodemon] watching extensions: js,mjs,json",
         "  Database connected successfully on port 5432.",
         "  Server listening at http://localhost:8080",
-        "  🟢 Boot complete. Ready."
+        "  Boot complete. Ready."
     ];
 
     btnRunAll.addEventListener('click', () => {
@@ -152,21 +153,21 @@ function setupCommandRunner() {
         btnRunAll.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span>Running';
         
         // Reset states
-        status1.innerHTML = '⏳ Pending';
-        status2.innerHTML = '⏳ Pending';
+        status1.innerHTML = '<span class="text-secondary">— Pending</span>';
+        status2.innerHTML = '<span class="text-secondary">— Pending</span>';
         terminalDrawer.classList.remove('d-none');
         terminalLines.innerHTML = '';
 
         // Step 1: Run Command 1
         setTimeout(() => {
-            status1.innerHTML = '🔄 Running';
+            status1.innerHTML = '<i class="bi bi-arrow-repeat text-warning spin-icon"></i> Running';
             streamOutput(0, 7, () => {
-                status1.innerHTML = '✅ OK';
+                status1.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> OK';
                 // Step 2: Run Command 2
                 setTimeout(() => {
-                    status2.innerHTML = '🔄 Running';
+                    status2.innerHTML = '<i class="bi bi-arrow-repeat text-warning spin-icon"></i> Running';
                     streamOutput(7, lines.length, () => {
-                        status2.innerHTML = '✅ OK';
+                        status2.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> OK';
                         btnRunAll.disabled = false;
                         btnRunAll.innerHTML = '<i class="bi bi-play-fill me-1"></i>Run All';
                     });
@@ -183,7 +184,7 @@ function setupCommandRunner() {
                 div.innerText = lines[i];
                 if (lines[i].includes('ERROR')) {
                     div.className = 'text-danger';
-                } else if (lines[i].includes('🟢') || lines[i].includes('started successfully')) {
+                } else if (lines[i].includes('Boot complete') || lines[i].includes('started successfully')) {
                     div.className = 'text-success';
                 } else if (lines[i].startsWith('$') || lines[i].startsWith('[')) {
                     div.className = 'text-info';
@@ -211,35 +212,39 @@ function setupDragDropInstaller() {
     const dropTarget = document.getElementById('drop-target');
     const successMsg = document.getElementById('install-success-msg');
 
+    if (!draggable || !dropTarget || !successMsg) return;
+
     draggable.addEventListener('dragstart', (e) => {
-        draggable.classList.add('cursor-grabbing');
+        draggable.classList.add('cursor-grabbing', 'dmg-dragging');
         e.dataTransfer.setData('text/plain', 'NoteTaker.app');
     });
 
     draggable.addEventListener('dragend', () => {
-        draggable.classList.remove('cursor-grabbing');
+        draggable.classList.remove('cursor-grabbing', 'dmg-dragging');
     });
 
     dropTarget.addEventListener('dragover', (e) => {
         e.preventDefault();
-        dropTarget.classList.add('drag-hover');
+        dropTarget.classList.add('dmg-drop-hover');
     });
 
     dropTarget.addEventListener('dragleave', () => {
-        dropTarget.classList.remove('drag-hover');
+        dropTarget.classList.remove('dmg-drop-hover');
     });
 
     dropTarget.addEventListener('drop', (e) => {
         e.preventDefault();
-        dropTarget.classList.remove('drag-hover');
+        dropTarget.classList.remove('dmg-drop-hover');
         const data = e.dataTransfer.getData('text/plain');
         if (data === 'NoteTaker.app') {
-            // Animate Drop Success
-            draggable.style.transform = 'scale(0)';
+            // Animate the draggable icon out
+            draggable.style.transition = 'all 0.3s ease';
+            draggable.style.transform = 'translate(-50%, -50%) scale(0)';
             draggable.style.opacity = '0';
+            // Show success overlay
             setTimeout(() => {
                 successMsg.classList.remove('d-none');
-                successMsg.classList.add('d-block');
+                successMsg.classList.add('d-flex');
             }, 300);
         }
     });
@@ -310,5 +315,38 @@ function setupPricingSwitcher() {
             paySuccessBlock.classList.remove('d-none');
             paySuccessBlock.classList.add('d-block');
         }, 1500);
+    });
+}
+
+// 7. macOS Gatekeeper Install Guide — Tab Switcher
+function setupGatekeeperTabs() {
+    const tabButtons = document.querySelectorAll('.gk-tab-btn');
+    const methodPanels = document.querySelectorAll('.gk-method-content');
+
+    if (!tabButtons.length) return;
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+
+            // Update button states
+            tabButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Hide all panels, then reveal the target with animation
+            methodPanels.forEach(panel => {
+                panel.classList.add('d-none');
+                // Re-trigger the CSS fadeInUp by removing/re-adding the class
+                panel.style.animation = 'none';
+            });
+
+            const targetPanel = document.getElementById(targetId);
+            if (targetPanel) {
+                targetPanel.classList.remove('d-none');
+                // Force reflow so animation restarts cleanly
+                void targetPanel.offsetWidth;
+                targetPanel.style.animation = '';
+            }
+        });
     });
 }

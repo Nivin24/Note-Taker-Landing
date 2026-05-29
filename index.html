@@ -19,6 +19,9 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="custom.css">
+    <!-- Favicon: app logo -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="apple-touch-icon" href="assets/logo.png">
 </head>
 <body class="theme-transition">
 
@@ -302,11 +305,11 @@
                             <!-- Sub Commands -->
                             <div class="command-row py-2 border-top border-secondary-subtle d-flex align-items-center justify-content-between">
                                 <span class="font-mono small text-secondary-emphasis">$ docker-compose up -d</span>
-                                <span id="cmd-status-1" class="text-secondary small">⏳ Pending</span>
+                                <span id="cmd-status-1" class="text-secondary small">— Pending</span>
                             </div>
                             <div class="command-row py-2 border-top border-secondary-subtle d-flex align-items-center justify-content-between">
                                 <span class="font-mono small text-secondary-emphasis">$ npm run dev</span>
-                                <span id="cmd-status-2" class="text-secondary small">⏳ Pending</span>
+                                <span id="cmd-status-2" class="text-secondary small">— Pending</span>
                             </div>
 
                             <!-- Live Terminal Output Drawer -->
@@ -328,65 +331,242 @@
     <section id="installation" class="py-5">
         <div class="container py-5">
             <div class="text-center mb-5 max-width-md mx-auto">
-                <h2 class="h1 fw-bold mb-3">Seamless Drag & Drop Installation</h2>
-                <p class="text-secondary fs-5">Installing Dev Cockpit is simple. Click download, mount the DMG volume, and drag the app into your applications folder.</p>
+                <h2 class="h1 fw-bold mb-3">Install in 3 Simple Steps</h2>
+                <p class="text-secondary fs-5">No App Store needed. Just download, drag, and do a one-time security approval — then Dev Cockpit lives in your menu bar forever.</p>
+                <!-- Step indicator — single compact line -->
+                <div class="install-steps-bar d-flex align-items-center justify-content-center gap-2 mt-4">
+                    <span class="install-step-pill active"><span class="step-num">1</span> Mount &amp; Drag</span>
+                    <i class="bi bi-chevron-right text-secondary small"></i>
+                    <span class="install-step-pill"><span class="step-num">2</span> Warning appears</span>
+                    <i class="bi bi-chevron-right text-secondary small"></i>
+                    <span class="install-step-pill"><span class="step-num">3</span> Open Anyway</span>
+                </div>
             </div>
 
-            <!-- Animated DMG Drag-and-Drop Mock -->
-            <div class="drag-install-box p-5 glass-card rounded-4 max-width-md mx-auto text-center border border-secondary-subtle position-relative overflow-hidden">
-                <div class="row align-items-center justify-content-around g-4">
-                    <div class="col-5 text-center">
-                        <div id="draggable-app" class="draggable-wrapper d-inline-block text-center cursor-grab" draggable="true">
-                            <div class="app-icon-ring mb-2 shadow-lg">
-                                <img src="assets/logo.png" alt="Dev Cockpit" width="70" height="70">
-                            </div>
-                            <span class="d-block small fw-bold">NoteTaker.app</span>
+            <!-- DMG Installer Interactive Widget -->
+            <div class="dmg-window-wrapper max-width-md mx-auto" style="margin-bottom: 20px;">
+                <!-- Window chrome bar -->
+                <div class="dmg-window-bar d-flex align-items-center gap-2 px-4 py-2">
+                    <span class="dmg-dot" style="background:#ef4444"></span>
+                    <span class="dmg-dot" style="background:#f59e0b"></span>
+                    <span class="dmg-dot" style="background:#10b981"></span>
+                    <span class="text-secondary small ms-2 fw-semibold" style="font-size:0.75rem; letter-spacing:0.02em;">NoteTaker Installer</span>
+                </div>
+
+                <!-- 16:9 interactive area with background -->
+                <div class="dmg-stage position-relative"
+                     style="background-image: url('assets/dmg_bg.png'); background-size: cover; background-position: center; aspect-ratio: 16/9; overflow: hidden;">
+
+                    <!-- Instruction text overlay -->
+                    <p class="dmg-hint-text position-absolute w-100 text-center text-white small fw-semibold"
+                       style="bottom: 10%; left:0; opacity:0.7; letter-spacing:0.03em;">
+                        Drag the app to Applications to install
+                    </p>
+
+                    <!-- Draggable App Icon -->
+                    <div id="draggable-app"
+                         class="dmg-icon position-absolute d-flex flex-column align-items-center gap-2 cursor-grab"
+                         draggable="true"
+                         style="left: 20%; top: 50%; transform: translate(-50%, -50%);">
+                        <div class="dmg-icon-bg shadow-lg">
+                            <img src="assets/logo.png" alt="NoteTaker" class="dmg-icon-img">
+                        </div>
+                        <span class="text-white small fw-semibold" style="font-size:0.75rem; text-shadow: 0 1px 4px rgba(0,0,0,0.8);">NoteTaker.app</span>
+                    </div>
+
+                    <!-- Animated curved arrow -->
+                    <div class="dmg-arrow position-absolute" style="left:50%; top:50%; transform:translate(-50%,-60%);">
+                        <svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 50 C10 20, 70 20, 60 10" stroke="rgba(96,165,250,0.9)" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            <polygon points="55,4 68,14 58,18" fill="rgba(96,165,250,0.9)"/>
+                        </svg>
+                    </div>
+
+                    <!-- Drop Target: Applications -->
+                    <div id="drop-target"
+                         class="dmg-icon position-absolute d-flex flex-column align-items-center gap-2"
+                         style="right: 20%; top: 50%; transform: translate(50%, -50%);">
+                        <div class="dmg-folder-icon">
+                            <i class="bi bi-folder-fill" style="font-size: 4rem; color: #3b82f6; filter: drop-shadow(0 4px 12px rgba(59,130,246,0.5));"></i>
+                        </div>
+                        <span class="text-white small fw-semibold" style="font-size:0.75rem; text-shadow: 0 1px 4px rgba(0,0,0,0.8);">Applications</span>
+                    </div>
+
+                    <!-- Success overlay (hidden by default) -->
+                    <div id="install-success-msg"
+                         class="position-absolute top-0 start-0 w-100 h-100 d-none align-items-center justify-content-center"
+                         style="background: rgba(16,185,129,0.15); backdrop-filter: blur(4px);">
+                        <div class="text-center">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size:3rem;"></i>
+                            <p class="text-white fw-bold mt-2 mb-0">Step 1 done — now approve below</p>
                         </div>
                     </div>
-                    
-                    <div class="col-2 text-center text-secondary">
-                        <i class="bi bi-chevron-double-right fs-1 pulse-icon"></i>
-                    </div>
 
-                    <div class="col-5 text-center">
-                        <div id="drop-target" class="drop-target-wrapper d-inline-block text-center rounded-4 border border-dashed border-secondary p-3">
-                            <div class="folder-icon-wrapper mb-2">
-                                <i class="bi bi-folder-fill text-primary display-4"></i>
-                            </div>
-                            <span class="d-block small fw-bold">Applications</span>
+                </div><!-- /dmg-stage -->
+            </div><!-- /dmg-window-wrapper -->
+
+            <!-- Spacer between drag box and gatekeeper guide -->
+            <div style="height: 20px;"></div>
+
+            </div><!-- /container -->
+
+            <!-- ══════════════ macOS Trust & Security Guide ══════════════ -->
+            <div class="container pb-5">
+                <div class="max-width-lg mx-auto">
+
+                    <!-- Why this warning appears -->
+                    <div class="glass-card rounded-4 p-4 mb-4 border border-secondary-subtle d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0 mt-1">
+                            <span class="badge rounded-circle bg-warning text-dark p-2"><i class="bi bi-info-lg fs-6"></i></span>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Why does macOS block the app when I double-click it?</h5>
+                            <p class="text-secondary small mb-0">
+                                When you double-click Dev Cockpit for the <strong>first time</strong>, macOS will show a security warning and block it from opening.
+                                This is completely normal — macOS does this for <strong>every</strong> app not distributed through the App Store or signed with a paid Apple Developer ID ($99/yr).
+                                Dev Cockpit contains <strong>no tracking, no telemetry, and no network calls</strong>. All your data stays 100% on your machine and is never shared.
+                            </p>
                         </div>
                     </div>
-                </div>
-                <div id="install-success-msg" class="alert alert-success mt-4 d-none py-2 rounded-pill fw-semibold">
-                    🎉 NoteTaker successfully copied! You can run it now.
+
+                    <!-- Step heading -->
+                    <div class="text-center mb-4">
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-2 small fw-bold mb-2 d-inline-block">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>Steps 2 &amp; 3 — One-time only
+                        </span>
+                        <h5 class="fw-bold mb-1">macOS will block the app on first launch — here's how to approve it</h5>
+                        <p class="text-secondary small mb-0">This happens once. After approval, the app opens instantly every time from the menu bar.</p>
+                    </div>
+
+                    <!-- Tabs -->
+                    <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="gatekeeper-tabs">
+                        <li class="nav-item">
+                            <button class="nav-link active rounded-pill px-4 gk-tab-btn" data-target="gk-method-a">
+                                <i class="bi bi-shield-lock me-2"></i>Privacy &amp; Security
+                                <span class="badge bg-success ms-2 small">Recommended</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link rounded-pill px-4 gk-tab-btn" data-target="gk-method-b">
+                                <i class="bi bi-mouse me-2"></i>Right-Click Method
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Method A: Privacy & Security -->
+                    <div id="gk-method-a" class="gk-method-content glass-card rounded-4 border border-secondary-subtle p-4">
+                        <div class="row g-4 align-items-start">
+                            <div class="col-lg-7">
+                                <!-- Screenshot -->
+                                <div class="rounded-3 overflow-hidden border border-secondary-subtle shadow-lg">
+                                    <img src="assets/macos_privacy_security.png"
+                                         alt="macOS Privacy & Security — Open Anyway button highlighted"
+                                         class="img-fluid w-100"
+                                         loading="lazy">
+                                </div>
+                                <p class="text-secondary small mt-2 mb-0 text-center"><i class="bi bi-camera me-1"></i>macOS Tahoe — System Settings › Privacy &amp; Security</p>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="d-flex flex-column gap-4">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="step-circle flex-shrink-0">1</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Mount &amp; drag to Applications</h6>
+                                            <p class="text-secondary small mb-0">Double-click <code>NoteTaker.dmg</code>, then drag the app icon into your <strong>Applications</strong> folder.</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="step-circle flex-shrink-0">2</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Open Privacy &amp; Security</h6>
+                                            <p class="text-secondary small mb-0">Go to <strong> → System Settings → Privacy &amp; Security</strong>. Scroll to the <em>Security</em> section at the bottom.</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="step-circle flex-shrink-0">3</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Click "Open Anyway"</h6>
+                                            <p class="text-secondary small mb-0">You'll see <em>"NoteTaker was blocked…"</em> — click <strong>Open Anyway</strong>, enter your Mac password. Done!</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-3 border border-success-subtle bg-success bg-opacity-10 d-flex align-items-center gap-2">
+                                        <i class="bi bi-check-circle-fill text-success"></i>
+                                        <span class="small text-success-emphasis fw-semibold">Saved permanently — app opens instantly from now on.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Method B: Right-click -->
+                    <div id="gk-method-b" class="gk-method-content glass-card rounded-4 border border-secondary-subtle p-4 d-none">
+                        <div class="row g-4 align-items-start">
+                            <div class="col-lg-7">
+                                <!-- Screenshot -->
+                                <div class="rounded-3 overflow-hidden border border-secondary-subtle shadow-lg">
+                                    <img src="assets/macos_right_click.png"
+                                         alt="macOS Finder — right-click NoteTaker with Open highlighted"
+                                         class="img-fluid w-100"
+                                         loading="lazy">
+                                </div>
+                                <p class="text-secondary small mt-2 mb-0 text-center"><i class="bi bi-camera me-1"></i>macOS Tahoe — Finder › Applications › Right-click</p>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="d-flex flex-column gap-4">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="step-circle flex-shrink-0">1</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Mount &amp; drag to Applications</h6>
+                                            <p class="text-secondary small mb-0">Double-click <code>NoteTaker.dmg</code>, then drag the app icon into <strong>Applications</strong>.</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="step-circle flex-shrink-0">2</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Right-click the app</h6>
+                                            <p class="text-secondary small mb-0">In <strong>Applications</strong>, <strong>right-click</strong> (or hold <kbd>Control</kbd> and click) on <code>NoteTaker.app</code>.</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="step-circle flex-shrink-0">3</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Select "Open"</h6>
+                                            <p class="text-secondary small mb-0">From the menu, click <strong>Open</strong>. A dialog appears — click the <strong>Open</strong> button inside it.</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-3 border border-success-subtle bg-success bg-opacity-10 d-flex align-items-center gap-2">
+                                        <i class="bi bi-check-circle-fill text-success"></i>
+                                        <span class="small text-success-emphasis fw-semibold">Saved permanently — app opens instantly from now on.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trust badges -->
+                    <div class="mt-4 d-flex flex-wrap justify-content-center gap-3">
+                        <a href="mailto:support@devcockpit.app" class="trust-badge glass-card px-4 py-2 rounded-pill text-decoration-none border border-secondary-subtle d-flex align-items-center gap-2">
+                            <i class="bi bi-envelope-fill fs-5"></i>
+                            <span class="small fw-semibold">Contact &amp; Support</span>
+                        </a>
+                        <div class="trust-badge glass-card px-4 py-2 rounded-pill border border-secondary-subtle d-flex align-items-center gap-2">
+                            <i class="bi bi-wifi-off text-success fs-5"></i>
+                            <span class="small fw-semibold">No tracking · No telemetry</span>
+                        </div>
+                        <div class="trust-badge glass-card px-4 py-2 rounded-pill border border-secondary-subtle d-flex align-items-center gap-2">
+                            <i class="bi bi-hdd-fill text-info fs-5"></i>
+                            <span class="small fw-semibold">100% local data storage</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+            <!-- ════════════════════════════════════════════════════════════ -->
 
-            <!-- macOS Gatekeeper Security Panel -->
-            <div class="card bg-glass border border-secondary-subtle max-width-lg mx-auto rounded-4 mt-5 p-4">
-                <div class="row g-4 align-items-center">
-                    <div class="col-md-2 text-center">
-                        <i class="bi bi-exclamation-triangle-fill text-warning display-4"></i>
-                    </div>
-                    <div class="col-md-10">
-                        <h4 class="fw-bold mb-2">Notice for macOS Security (Gatekeeper)</h4>
-                        <p class="text-secondary small mb-0">
-                            Because Dev Cockpit is distributed locally and code-signed using ad-hoc certificates (rather than standard Apple developer licenses), macOS will prompt a warning on first launch.
-                            To open the app:
-                        </p>
-                        <ol class="text-secondary small mt-2 ps-3 mb-0">
-                            <li>Drag the app to <strong>Applications</strong>.</li>
-                            <li>Right-click (or Control-click) <strong>NoteTaker.app</strong> in the Applications folder and select <strong>Open</strong>.</li>
-                            <li>Alternatively, navigate to <strong>System Settings > Privacy & Security</strong>, scroll down to the Security section, and click <strong>Open Anyway</strong>.</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section><!-- /installation -->
 
-    <!-- Version History Archive Section -->
-    <section id="releases" class="py-5 bg-glass-dark-section border-top border-bottom border-secondary-subtle">
+        <!-- Version History Archive Section -->
+        <section id="releases" class="py-5 bg-glass-dark-section border-top border-bottom border-secondary-subtle">
         <div class="container py-5">
             <div class="text-center mb-5 max-width-md mx-auto">
                 <h2 class="h1 fw-bold mb-3">Release Archives</h2>
