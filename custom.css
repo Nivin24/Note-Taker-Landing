@@ -1,0 +1,481 @@
+/* Custom CSS for Dev Cockpit Landing Page */
+
+/* Root variables defining the Design System */
+:root {
+    --transition-speed: 0.4s;
+    --font-mono: 'Fira Code', monospace;
+}
+
+/* ☀️ Light Theme (Apple-like marketing site aesthetic) */
+body[data-theme="light"] {
+    --bg-main: #f5f5f7;
+    --bg-card: #ffffff;
+    --bg-accent-section: #e8e8ed;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --text-primary: #1d1d1f;
+    --text-secondary: #86868b;
+    --btn-primary-bg: #0071e3;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #e8e8ed;
+    --btn-secondary-text: #1d1d1f;
+    --editor-bg: #ffffff;
+    --cockpit-bg: #f5f5f7;
+    --accent: #0071e3;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.06);
+    --glow-color: rgba(0, 113, 227, 0.12);
+    --logo-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    --code-color: #0071e3;
+}
+
+/* 🌙 Dark Theme (Premium Minimal Solid Dark) */
+body[data-theme="dark"] {
+    --bg-main: #000000;
+    --bg-card: #121212;
+    --bg-accent-section: #0a0a0a;
+    --border-color: rgba(255, 255, 255, 0.12);
+    --text-primary: #f5f5f7;
+    --text-secondary: #86868b;
+    --btn-primary-bg: #ffffff;
+    --btn-primary-text: #000000;
+    --btn-secondary-bg: #1d1d1f;
+    --btn-secondary-text: #f5f5f7;
+    --editor-bg: #080808;
+    --cockpit-bg: #121212;
+    --accent: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.6);
+    --glow-color: rgba(255, 255, 255, 0.08);
+    --logo-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
+    --code-color: #a15ffb;
+}
+
+/* Base Body Configuration */
+body {
+    background-color: var(--bg-main) !important;
+    color: var(--text-primary) !important;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    position: relative;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+/* Top Blur Accent */
+.top-glow {
+    position: absolute;
+    width: 60vw;
+    height: 40vh;
+    left: 20vw;
+    top: -20vh;
+    background: radial-gradient(circle, var(--glow-color) 0%, transparent 100%);
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Typography Customizations */
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+.fw-extrabold {
+    font-weight: 800;
+}
+.font-mono {
+    font-family: var(--font-mono) !important;
+}
+.font-accent {
+    font-weight: 700;
+}
+.max-width-md {
+    max-width: 600px;
+}
+.max-width-lg {
+    max-width: 800px;
+}
+.link-underline-none {
+    text-decoration: none;
+}
+
+/* Premium Apple-like Heading Gradients (only active in dark mode, solid in light) */
+body[data-theme="dark"] .gradient-text {
+    background: linear-gradient(135deg, #ffffff 0%, #86868b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+body[data-theme="light"] .gradient-text {
+    color: var(--text-primary);
+}
+
+/* Navigation Links */
+.navbar-nav .nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+.navbar-nav .nav-link:hover {
+    color: var(--text-primary) !important;
+}
+
+#theme-toggle {
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+}
+#theme-toggle:hover {
+    color: var(--text-primary);
+}
+
+/* Glassmorphism/Card styles adapted for light/dark */
+.glass-card {
+    background-color: var(--bg-card) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-lg) !important;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.bg-glass-dark {
+    background-color: rgba(9, 10, 15, 0.7) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.bg-glass-dark-section {
+    background-color: var(--bg-accent-section) !important;
+    transition: background-color var(--transition-speed) ease;
+}
+
+.bg-glass {
+    background-color: rgba(120, 120, 128, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color);
+}
+
+/* Glow Badge */
+.bg-purple-glow {
+    background: var(--text-primary) !important;
+    color: var(--bg-main) !important;
+    border: 1px solid var(--border-color);
+}
+
+/* Clean, Premium Buttons */
+.btn-primary {
+    background-color: var(--btn-primary-bg) !important;
+    border: 1px solid var(--btn-primary-bg) !important;
+    color: var(--btn-primary-text) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-outline-light {
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    background: transparent !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.btn-outline-light:hover {
+    background-color: rgba(120, 120, 128, 0.1) !important;
+    border-color: var(--text-primary) !important;
+}
+
+.btn-outline-purple {
+    border: 1px solid var(--accent) !important;
+    color: var(--accent) !important;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+.btn-outline-purple:hover:not(:disabled) {
+    background-color: var(--accent);
+    color: var(--bg-main) !important;
+}
+
+.btn-purple {
+    background-color: var(--accent) !important;
+    border: 1px solid var(--accent) !important;
+    color: var(--bg-main) !important;
+}
+.btn-purple:hover {
+    opacity: 0.9;
+}
+
+/* Hero Section mockup styling */
+.hero-image-wrapper {
+    perspective: 1000px;
+}
+.mockup-card {
+    transform: rotateY(-6deg) rotateX(4deg) rotateZ(1deg);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mockup-card:hover {
+    transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg);
+}
+
+/* Feature Grid Cards */
+.feature-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--text-primary) !important;
+    box-shadow: 0 10px 30px var(--glow-color) !important;
+}
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--text-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.feature-card:hover::before {
+    opacity: 1;
+}
+
+.icon-box {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mode toggles */
+.btn-toggle {
+    border: none !important;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+.btn-toggle.active {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+/* Interactive Mockup Styling */
+.mockup-window {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-lg) !important;
+    transition: all var(--transition-speed) ease;
+}
+.mockup-header {
+    background-color: var(--bg-accent-section) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    transition: all var(--transition-speed) ease;
+}
+.window-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.window-dot.red { background-color: #ef4444; }
+.window-dot.yellow { background-color: #f59e0b; }
+.window-dot.green { background-color: #10b981; }
+
+.mockup-tab {
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+.mockup-tab.active {
+    background-color: var(--editor-bg) !important;
+    border-bottom: 2px solid var(--accent) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Editor Mock details */
+.bg-editor-theme {
+    background-color: var(--editor-bg) !important;
+    color: var(--text-primary) !important;
+    min-height: 280px;
+    overflow-y: auto;
+    transition: all var(--transition-speed) ease;
+}
+.editor-line {
+    white-space: pre;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+.editor-line .text-muted {
+    color: var(--text-secondary) !important;
+}
+.line-num {
+    display: inline-block;
+    width: 30px;
+    color: var(--text-secondary) !important;
+    opacity: 0.4;
+    text-align: right;
+    margin-right: 15px;
+    user-select: none;
+}
+
+/* Cockpit View Details */
+.bg-cockpit-theme {
+    background-color: var(--cockpit-bg) !important;
+    min-height: 280px;
+    transition: all var(--transition-speed) ease;
+}
+.cockpit-card {
+    background-color: var(--editor-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    transition: all var(--transition-speed) ease;
+}
+.status-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.bg-success-subtle {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Draggable app installer widget */
+.draggable-wrapper {
+    transition: transform 0.2s ease;
+}
+.draggable-wrapper:hover {
+    transform: scale(1.05);
+}
+.app-icon-ring {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 20px;
+    display: inline-block;
+    box-shadow: var(--shadow-sm);
+}
+.cursor-grab {
+    cursor: grab;
+}
+.cursor-grabbing {
+    cursor: grabbing;
+}
+.drop-target-wrapper {
+    background-color: var(--bg-accent-section);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    width: 100%;
+    min-height: 140px;
+}
+.drop-target-wrapper.drag-hover {
+    background-color: rgba(0, 113, 227, 0.08) !important;
+    border-color: var(--accent) !important;
+    transform: scale(1.02);
+}
+
+/* Pricing Grid details */
+.border-active-glow {
+    border: 2px solid var(--accent) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+.border-glass {
+    border: 1px solid var(--border-color) !important;
+}
+
+.opacity-60 {
+    opacity: 0.4;
+}
+.opacity-100 {
+    opacity: 1 !important;
+}
+
+/* Checkout Switcher Toggle adjustments */
+.pricing-toggle-switch:checked {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.5; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.5; }
+}
+.pulse-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.pulse-icon {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Countdown Clock styling */
+.timer-ring {
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.small-badge {
+    font-size: 0.7rem !important;
+}
+.clickable-key {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.clickable-key:hover {
+    color: var(--text-primary);
+}
+.text-secondary-hover:hover {
+    color: var(--text-primary) !important;
+}
+.transition-all {
+    transition: all 0.4s ease;
+}
+.theme-transition {
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+.version-row {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    transition: border-color 0.2s ease;
+}
+.version-row:hover {
+    border-color: var(--text-primary) !important;
+}
+
+/* Code Syntax variables injection styling */
+.text-info {
+    color: var(--code-color) !important;
+}
+.text-warning {
+    color: #f59e0b !important;
+}
+.text-success {
+    color: #10b981 !important;
+}
+.text-secondary-emphasis {
+    color: var(--text-primary) !important;
+    opacity: 0.85;
+}
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+.text-muted {
+    color: var(--text-secondary) !important;
+    opacity: 0.7;
+}

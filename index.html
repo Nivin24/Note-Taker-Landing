@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Cockpit — Note Taker & Automator for macOS</title>
+    <meta name="description" content="A high-density macOS Menu Bar developer notes and automation cockpit app. Port checkers, command runners, secret masking, and cron managers in one place.">
+    
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="custom.css">
+</head>
+<body class="theme-transition">
+
+    <!-- Top Glow Overlay -->
+    <div class="top-glow"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="assets/logo.png" alt="Dev Cockpit Logo" width="40" height="40" class="me-2 rounded-3 brand-logo">
+                <span class="fw-bold tracking-tight">Dev Cockpit</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link px-3" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#interactive-demo">Interactive Demo</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#installation">Installation</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#releases">Releases</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#pricing">Pricing</a></li>
+                    <li class="nav-item px-2">
+                        <button id="theme-toggle" class="btn btn-sm btn-link text-decoration-none" aria-label="Toggle Theme">
+                            <i id="theme-icon" class="bi bi-moon-fill fs-5"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a id="nav-download-btn" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold download-btn-trigger" href="../NoteTaker.dmg" download>
+                            <i class="bi bi-download me-2"></i>Download Free
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section py-5 position-relative">
+        <div class="container py-4">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 text-start">
+                    <div class="badge-pill-container mb-3">
+                        <span class="badge bg-purple-glow text-uppercase px-3 py-2 rounded-pill fw-bold">v1.0 Out Now</span>
+                    </div>
+                    <h1 class="display-3 fw-extrabold tracking-tight text-white mb-4">
+                        Your macOS Menu Bar <span class="gradient-text font-accent">Developer Cockpit</span>
+                    </h1>
+                    <p class="lead text-secondary mb-4 fs-5">
+                        A native, high-density notes app that parses variables, tests localhost port health, runs scripts in background terminal buffers, and automates tasks with cron schedulers. All from a single keystroke.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a class="btn btn-primary btn-glow btn-lg px-4 py-3 rounded-pill fw-bold download-btn-trigger" href="../NoteTaker.dmg" download>
+                            <i class="bi bi-apple me-2"></i>Download Installer (.dmg)
+                        </a>
+                        <a class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold" href="https://github.com" target="_blank">
+                            <i class="bi bi-github me-2"></i>GitHub Source
+                        </a>
+                    </div>
+                    <div class="mt-4 text-secondary d-flex align-items-center gap-3">
+                        <span><i class="bi bi-shield-check text-success me-2"></i>Ad-hoc Signed</span>
+                        <span>•</span>
+                        <span><i class="bi bi-cpu text-info me-2"></i>Apple Silicon Native</span>
+                        <span>•</span>
+                        <span><i class="bi bi-clock me-2"></i>Auto-clears clipboard</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image-wrapper">
+                        <div class="glass-card mockup-card shadow-2xl">
+                            <img src="assets/banner.png" alt="Dev Cockpit Features Mockup" class="img-fluid rounded-4 mockup-img">
+                            <div class="glowing-border-active"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- App Clipboard Security Bar -->
+    <div class="clipboard-ticker bg-glass-dark py-2 border-top border-bottom border-secondary-subtle">
+        <div class="container d-flex justify-content-between align-items-center">
+            <span class="text-secondary small d-flex align-items-center">
+                <span class="pulse-dot me-2"></span>
+                <strong>Live Security Alert</strong>: Decrypted secret copied to clipboard clears automatically in 30 seconds.
+            </span>
+            <div id="countdown-container" class="d-none align-items-center gap-2">
+                <span class="text-warning small fw-bold">Clipboard Timer:</span>
+                <div class="timer-ring">
+                    <span id="timer-text" class="text-white small">30s</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-md mx-auto">
+                <h2 class="h1 fw-bold mb-3">Engineered for Developer Productivity</h2>
+                <p class="text-secondary fs-5">Tired of switching between text editors, terminal windows, Chrome tabs, and password managers? Dev Cockpit merges them into a clean local workflow.</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Card 1 -->
+                <div class="col-md-4">
+                    <div class="feature-card glass-card p-4 rounded-4 h-100 position-relative overflow-hidden">
+                        <div class="icon-box rounded-3 bg-opacity-10 bg-primary mb-3">
+                            <i class="bi bi-lock-fill text-primary fs-3"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Secrets Masking</h3>
+                        <p class="text-secondary mb-0">Automatically detects database passwords, AWS keys, and API tokens. Shields them behind a password mask and enables secure one-click copying.</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="col-md-4">
+                    <div class="feature-card glass-card p-4 rounded-4 h-100 position-relative overflow-hidden">
+                        <div class="icon-box rounded-3 bg-opacity-10 bg-success mb-3">
+                            <i class="bi bi-play-circle-fill text-success fs-3"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Command Runner</h3>
+                        <p class="text-secondary mb-0">Run terminal commands directly from your markdown notes. Watch stdout and stderr stream in real-time in a collapsible terminal drawer.</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="col-md-4">
+                    <div class="feature-card glass-card p-4 rounded-4 h-100 position-relative overflow-hidden">
+                        <div class="icon-box rounded-3 bg-opacity-10 bg-danger mb-3">
+                            <i class="bi bi-activity text-danger fs-3"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Port Connection Monitor</h3>
+                        <p class="text-secondary mb-0">Displays real-time socket connection lights (green/red) next to socket details in notes. Instantly verify if your server or database port is running.</p>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="col-md-4">
+                    <div class="feature-card glass-card p-4 rounded-4 h-100 position-relative overflow-hidden">
+                        <div class="icon-box rounded-3 bg-opacity-10 bg-warning mb-3">
+                            <i class="bi bi-alarm-fill text-warning fs-3"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Cron Schedulers</h3>
+                        <p class="text-secondary mb-0">Use <code>@every</code> or <code>@at</code> annotations to schedule jobs. Runs in background and posts native macOS banner updates on success.</p>
+                    </div>
+                </div>
+                <!-- Card 5 -->
+                <div class="col-md-4">
+                    <div class="feature-card glass-card p-4 rounded-4 h-100 position-relative overflow-hidden">
+                        <div class="icon-box rounded-3 bg-opacity-10 bg-info mb-3">
+                            <i class="bi bi-git text-info fs-3"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Git branch Banner</h3>
+                        <p class="text-secondary mb-0">Displays branch names, local uncommitted modifications count, and fast Pull/Push buttons when a tab corresponds to a local git repository.</p>
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="col-md-4">
+                    <div class="feature-card glass-card p-4 rounded-4 h-100 position-relative overflow-hidden">
+                        <div class="icon-box rounded-3 bg-opacity-10 bg-purple mb-3">
+                            <i class="bi bi-fingerprint text-purple fs-3"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Biometric Tab Lock</h3>
+                        <p class="text-secondary mb-0">Lock sensitive project tabs behind Touch ID or local passwords. Keeps API credentials encrypted and secure from unauthorized access.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive App Mockup Section -->
+    <section id="interactive-demo" class="py-5 bg-glass-dark-section position-relative">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-md mx-auto">
+                <h2 class="h1 fw-bold mb-3">Interactive Workspace Preview</h2>
+                <p class="text-secondary fs-5">Toggle between Unlocked (Edit) and Locked (Cockpit) modes below to see how Dev Cockpit processes variables, runs commands, and monitors ports.</p>
+                
+                <!-- Toggle Mode Selector -->
+                <div class="d-inline-flex bg-glass p-1 rounded-pill mt-3 shadow-inner">
+                    <button id="btn-mode-unlocked" class="btn btn-toggle rounded-pill px-4 py-2 fw-semibold active">
+                        <i class="bi bi-unlock-fill me-2"></i>Unlocked (Editor)
+                    </button>
+                    <button id="btn-mode-locked" class="btn btn-toggle rounded-pill px-4 py-2 fw-semibold">
+                        <i class="bi bi-lock-fill me-2 text-warning"></i>Locked (Cockpit)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interactive Mockup Container -->
+            <div class="mockup-window glass-card rounded-4 shadow-3xl mx-auto max-width-lg border border-secondary-subtle">
+                <!-- Title Bar -->
+                <div class="mockup-header px-4 py-3 d-flex align-items-center justify-content-between border-bottom border-secondary-subtle bg-opacity-20 bg-black">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="window-dot red"></span>
+                        <span class="window-dot yellow"></span>
+                        <span class="window-dot green"></span>
+                    </div>
+                    <div class="mockup-tabs d-flex align-items-center gap-1">
+                        <span class="mockup-tab active px-3 py-1 rounded-top small">📂 node-backend</span>
+                        <span class="mockup-tab px-3 py-1 rounded-top small text-secondary">📁 front-react</span>
+                    </div>
+                    <div class="mockup-status-icons d-flex align-items-center gap-3">
+                        <i class="bi bi-key text-secondary clickable-key" title="Generate Key"></i>
+                        <span id="mockup-lock-badge" class="badge bg-secondary-subtle text-dark py-1 px-2 rounded-2 small d-none">
+                            <i class="bi bi-lock-fill text-warning me-1"></i>Cockpit Locked
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Editor Content -->
+                <div id="mockup-editor-view" class="mockup-body p-4 bg-editor-theme font-mono">
+                    <div class="editor-line"><span class="line-num">1</span><span class="text-muted"># Dev Configuration</span></div>
+                    <div class="editor-line"><span class="line-num">2</span>DB_HOST=127.0.0.1</div>
+                    <div class="editor-line"><span class="line-num">3</span>DB_PORT=5432</div>
+                    <div class="editor-line"><span class="line-num">4</span>DB_SECRET="postgre-master-sec-990" <span class="text-warning"># expires: 2026-12-31</span></div>
+                    <div class="editor-line"><span class="line-num">5</span></div>
+                    <div class="editor-line"><span class="line-num">6</span><span class="text-muted"># Ports and Services</span></div>
+                    <div class="editor-line"><span class="line-num">7</span>localhost:8080</div>
+                    <div class="editor-line"><span class="line-num">8</span></div>
+                    <div class="editor-line"><span class="line-num">9</span><span class="text-muted">## Boot Environment</span></div>
+                    <div class="editor-line"><span class="line-num">10</span>$ docker-compose up -d</div>
+                    <div class="editor-line"><span class="line-num">11</span>$ npm run dev</div>
+                </div>
+
+                <!-- Cockpit Content -->
+                <div id="mockup-cockpit-view" class="mockup-body p-4 bg-cockpit-theme d-none">
+                    <!-- Environment Variables Card -->
+                    <div class="cockpit-group mb-4">
+                        <h4 class="small text-secondary text-uppercase tracking-wider fw-bold mb-3"><i class="bi bi-key-fill me-2 text-primary"></i>Credentials & Variables</h4>
+                        <div class="cockpit-card p-3 rounded-3 mb-2 border border-secondary-subtle">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="font-mono text-info small">DB_HOST</span>
+                                <span class="font-mono small">127.0.0.1</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="font-mono text-info small">DB_PORT</span>
+                                <span class="font-mono small">5432</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="font-mono text-info small">DB_SECRET</span>
+                                    <span class="badge bg-warning text-dark px-2 py-0.5 rounded-pill small-badge">Exp: 2026-12-31</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span id="secret-placeholder" class="font-mono text-secondary small">••••••••</span>
+                                    <button id="btn-copy-secret" class="btn btn-sm btn-outline-secondary py-1 px-2 rounded-2">
+                                        <i class="bi bi-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Port Health Card -->
+                    <div class="cockpit-group mb-4">
+                        <h4 class="small text-secondary text-uppercase tracking-wider fw-bold mb-3"><i class="bi bi-activity me-2 text-danger"></i>Service Ports Health</h4>
+                        <div class="cockpit-card p-3 rounded-3 border border-secondary-subtle d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="font-mono small">localhost:8080</span>
+                                <span class="text-secondary small">(Local Web API)</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span id="port-status-badge" class="badge bg-success-subtle text-success py-1 px-3 rounded-pill fw-semibold small d-flex align-items-center gap-2">
+                                    <span class="status-pulse bg-success"></span>ON
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Command Group Card -->
+                    <div class="cockpit-group">
+                        <h4 class="small text-secondary text-uppercase tracking-wider fw-bold mb-3"><i class="bi bi-terminal-fill me-2 text-success"></i>Sequential Command Groups</h4>
+                        <div class="cockpit-card p-3 rounded-3 border border-secondary-subtle">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="fw-bold"><i class="bi bi-folder-fill text-warning me-2"></i>Boot Environment</span>
+                                <div class="d-flex gap-2">
+                                    <button id="btn-run-all" class="btn btn-sm btn-success px-3 rounded-pill fw-semibold">
+                                        <i class="bi bi-play-fill me-1"></i>Run All
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Sub Commands -->
+                            <div class="command-row py-2 border-top border-secondary-subtle d-flex align-items-center justify-content-between">
+                                <span class="font-mono small text-secondary-emphasis">$ docker-compose up -d</span>
+                                <span id="cmd-status-1" class="text-secondary small">⏳ Pending</span>
+                            </div>
+                            <div class="command-row py-2 border-top border-secondary-subtle d-flex align-items-center justify-content-between">
+                                <span class="font-mono small text-secondary-emphasis">$ npm run dev</span>
+                                <span id="cmd-status-2" class="text-secondary small">⏳ Pending</span>
+                            </div>
+
+                            <!-- Live Terminal Output Drawer -->
+                            <div id="mock-terminal-drawer" class="d-none mt-3 p-3 rounded-3 bg-black font-mono small text-success-emphasis border border-dark">
+                                <div class="d-flex justify-content-between align-items-center mb-2 border-bottom border-dark pb-1">
+                                    <span class="text-secondary small">Terminal Console</span>
+                                    <span class="badge bg-success text-dark small-badge">active</span>
+                                </div>
+                                <div id="terminal-lines" class="lh-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation" class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-md mx-auto">
+                <h2 class="h1 fw-bold mb-3">Seamless Drag & Drop Installation</h2>
+                <p class="text-secondary fs-5">Installing Dev Cockpit is simple. Click download, mount the DMG volume, and drag the app into your applications folder.</p>
+            </div>
+
+            <!-- Animated DMG Drag-and-Drop Mock -->
+            <div class="drag-install-box p-5 glass-card rounded-4 max-width-md mx-auto text-center border border-secondary-subtle position-relative overflow-hidden">
+                <div class="row align-items-center justify-content-around g-4">
+                    <div class="col-5 text-center">
+                        <div id="draggable-app" class="draggable-wrapper d-inline-block text-center cursor-grab" draggable="true">
+                            <div class="app-icon-ring mb-2 shadow-lg">
+                                <img src="assets/logo.png" alt="Dev Cockpit" width="70" height="70">
+                            </div>
+                            <span class="d-block small fw-bold">NoteTaker.app</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-2 text-center text-secondary">
+                        <i class="bi bi-chevron-double-right fs-1 pulse-icon"></i>
+                    </div>
+
+                    <div class="col-5 text-center">
+                        <div id="drop-target" class="drop-target-wrapper d-inline-block text-center rounded-4 border border-dashed border-secondary p-3">
+                            <div class="folder-icon-wrapper mb-2">
+                                <i class="bi bi-folder-fill text-primary display-4"></i>
+                            </div>
+                            <span class="d-block small fw-bold">Applications</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="install-success-msg" class="alert alert-success mt-4 d-none py-2 rounded-pill fw-semibold">
+                    🎉 NoteTaker successfully copied! You can run it now.
+                </div>
+            </div>
+
+            <!-- macOS Gatekeeper Security Panel -->
+            <div class="card bg-glass border border-secondary-subtle max-width-lg mx-auto rounded-4 mt-5 p-4">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="bi bi-exclamation-triangle-fill text-warning display-4"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h4 class="fw-bold mb-2">Notice for macOS Security (Gatekeeper)</h4>
+                        <p class="text-secondary small mb-0">
+                            Because Dev Cockpit is distributed locally and code-signed using ad-hoc certificates (rather than standard Apple developer licenses), macOS will prompt a warning on first launch.
+                            To open the app:
+                        </p>
+                        <ol class="text-secondary small mt-2 ps-3 mb-0">
+                            <li>Drag the app to <strong>Applications</strong>.</li>
+                            <li>Right-click (or Control-click) <strong>NoteTaker.app</strong> in the Applications folder and select <strong>Open</strong>.</li>
+                            <li>Alternatively, navigate to <strong>System Settings > Privacy & Security</strong>, scroll down to the Security section, and click <strong>Open Anyway</strong>.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Version History Archive Section -->
+    <section id="releases" class="py-5 bg-glass-dark-section border-top border-bottom border-secondary-subtle">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-md mx-auto">
+                <h2 class="h1 fw-bold mb-3">Release Archives</h2>
+                <p class="text-secondary fs-5">Access all major releases of Dev Cockpit. Download legacy stable builds or the latest feature releases.</p>
+            </div>
+
+            <div class="max-width-lg mx-auto d-flex flex-column gap-3">
+                <!-- Version 1.0.0 -->
+                <div class="version-row p-4 glass-card rounded-4 d-flex flex-wrap align-items-center justify-content-between border border-secondary-subtle">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="version-badge bg-primary bg-opacity-10 text-primary py-2 px-3 rounded-3 fw-bold font-mono">v1.0.0</div>
+                        <div>
+                            <h4 class="h6 fw-bold text-white mb-1">Production Release (Stable)</h4>
+                            <span class="text-secondary small">Released: May 29, 2026</span>
+                        </div>
+                    </div>
+                    <div class="my-2 my-md-0">
+                        <span class="badge bg-success-subtle text-success py-1 px-3 rounded-pill fw-semibold small">Active Build</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="../NoteTaker.dmg" class="btn btn-sm btn-outline-light rounded-pill px-3 py-2 fw-semibold" download>
+                            <i class="bi bi-download me-1"></i>Download DMG
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Version 0.9.0 -->
+                <div class="version-row p-4 glass-card rounded-4 d-flex flex-wrap align-items-center justify-content-between border border-secondary-subtle opacity-75">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="version-badge bg-secondary bg-opacity-10 text-secondary py-2 px-3 rounded-3 fw-bold font-mono">v0.9.0</div>
+                        <div>
+                            <h4 class="h6 fw-bold text-white mb-1">Beta Pre-release</h4>
+                            <span class="text-secondary small">Released: May 15, 2026</span>
+                        </div>
+                    </div>
+                    <div class="my-2 my-md-0">
+                        <span class="badge bg-secondary-subtle text-secondary py-1 px-3 rounded-pill fw-semibold small">Legacy Build</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="../NoteTaker.dmg" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 fw-semibold" download>
+                            <i class="bi bi-download me-1"></i>Download DMG
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-md mx-auto">
+                <h2 class="h1 fw-bold mb-3">Simple, Transparent Licensing</h2>
+                <p class="text-secondary fs-5">Start using Dev Cockpit today for free. Help us test and shape the future of local developer dashboards.</p>
+                
+                <!-- Pricing Switcher Control -->
+                <div class="d-inline-flex align-items-center gap-3 bg-glass p-2 rounded-pill mt-4 border border-secondary-subtle">
+                    <span id="label-free-mode" class="small fw-semibold text-primary">Free Mode (Active)</span>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input pricing-toggle-switch cursor-pointer" type="checkbox" role="switch" id="pricing-switcher">
+                    </div>
+                    <span id="label-paid-mode" class="small fw-semibold text-secondary">Show Future Licensing ($1–$2)</span>
+                </div>
+            </div>
+
+            <!-- Pricing Grid -->
+            <div class="row justify-content-center g-4">
+                <!-- Card 1: Free Tier -->
+                <div class="col-md-5">
+                    <div id="pricing-card-free" class="pricing-card glass-card p-5 rounded-4 h-100 position-relative border-active-glow">
+                        <div class="badge-pill-container mb-3 position-absolute top-0 end-0 mt-4 me-4">
+                            <span class="badge bg-success-subtle text-success py-1 px-3 rounded-pill fw-semibold">Current Version</span>
+                        </div>
+                        <h3 class="h4 fw-bold mb-2">Developer Alpha</h3>
+                        <p class="text-secondary small mb-4">Complete toolset for single-machine setups.</p>
+                        
+                        <div class="pricing-price mb-4">
+                            <span class="display-4 fw-extrabold text-white">$0</span>
+                            <span class="text-secondary fs-6">/ forever</span>
+                        </div>
+
+                        <ul class="list-unstyled d-flex flex-column gap-3 mb-5 text-secondary">
+                            <li><i class="bi bi-check2 text-primary me-2"></i>Unlimited local note files & tabs</li>
+                            <li><i class="bi bi-check2 text-primary me-2"></i>All 15+ execution features</li>
+                            <li><i class="bi bi-check2 text-primary me-2"></i>Full terminal runners & cron scheduler</li>
+                            <li><i class="bi bi-check2 text-primary me-2"></i>Offline database, 100% privacy</li>
+                        </ul>
+
+                        <a class="btn btn-primary btn-glow w-100 py-3 rounded-pill fw-bold download-btn-trigger" href="../NoteTaker.dmg" download>
+                            <i class="bi bi-download me-2"></i>Download Installer
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2: License Key Tier (Scalability) -->
+                <div class="col-md-5">
+                    <div id="pricing-card-paid" class="pricing-card glass-card p-5 rounded-4 h-100 position-relative border-glass opacity-60 transition-all">
+                        <div class="badge-pill-container mb-3 position-absolute top-0 end-0 mt-4 me-4">
+                            <span class="badge bg-purple-glow text-white py-1 px-3 rounded-pill fw-semibold">Scalability Model</span>
+                        </div>
+                        <h3 class="h4 fw-bold mb-2">Dev License Key</h3>
+                        <p class="text-secondary small mb-4">Single lifetime key with automatic checks.</p>
+                        
+                        <div class="pricing-price mb-4">
+                            <span id="dynamic-price-value" class="display-4 fw-extrabold text-white">$1.99</span>
+                            <span class="text-secondary fs-6">/ lifetime key</span>
+                        </div>
+
+                        <ul class="list-unstyled d-flex flex-column gap-3 mb-5 text-secondary">
+                            <li><i class="bi bi-check2 text-purple me-2"></i>Everything in Developer Alpha</li>
+                            <li><i class="bi bi-check2 text-purple me-2"></i>Support future native improvements</li>
+                            <li><i class="bi bi-check2 text-purple me-2"></i>Lifetime license updates</li>
+                            <li><i class="bi bi-check2 text-purple me-2"></i>Developer roadmap voting rights</li>
+                        </ul>
+
+                        <button id="btn-purchase-mock" class="btn btn-outline-purple w-100 py-3 rounded-pill fw-bold" disabled>
+                            <i class="bi bi-credit-card me-2"></i>Buy License Key
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Mock Checkout Modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card rounded-4 border border-secondary-subtle">
+                <div class="modal-header border-bottom border-secondary-subtle p-4">
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-credit-card-fill text-purple me-2"></i>Simulated Checkout</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <p class="text-secondary">This checkout demonstrates how the future payment flow will scale. Users pay $1.99 to receive an activation key.</p>
+                    <div class="payment-box p-3 rounded-3 bg-black bg-opacity-40 border border-secondary-subtle text-start mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small text-secondary">Product:</span>
+                            <span class="small text-white fw-bold">NoteTaker Lifetime Key</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small text-secondary">Amount:</span>
+                            <span class="small text-white fw-bold">$1.99</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="small text-secondary">Taxes/Fees:</span>
+                            <span class="small text-white">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <button id="btn-simulate-pay" class="btn btn-purple w-100 py-3 rounded-pill fw-bold mb-3">
+                        <i class="bi bi-wallet2 me-2"></i>Simulate Stripe Payment
+                    </button>
+                    <div id="payment-success-block" class="d-none mt-3">
+                        <div class="text-success mb-2"><i class="bi bi-check-circle-fill display-5"></i></div>
+                        <span class="d-block fw-bold text-white mb-1">License Key Generated Successfully!</span>
+                        <code class="d-block p-2 rounded bg-dark border text-info font-mono mb-2">NT-889X-LOK9-2200-ZSHA</code>
+                        <span class="text-secondary small d-block">Paste this key in the settings tab within NoteTaker app to activate.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer py-5 border-top border-secondary-subtle bg-black">
+        <div class="container text-center text-secondary small">
+            <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
+                <img src="assets/logo.png" alt="Dev Cockpit" width="24" height="24" class="rounded-1">
+                <span class="fw-semibold text-white">Dev Cockpit</span>
+            </div>
+            <p class="mb-2">Built with native macOS structures and SwiftUI. Runs as a status agent in macOS status bar.</p>
+            <p class="mb-4">Requirements: macOS Ventura 13.0 or later. Optimized for Apple Silicon Macs (M1/M2/M3).</p>
+            <div class="d-flex justify-content-center gap-4 mb-4">
+                <a href="#features" class="text-secondary-hover link-underline-none">Features</a>
+                <a href="#interactive-demo" class="text-secondary-hover link-underline-none">Interactive Mockup</a>
+                <a href="#installation" class="text-secondary-hover link-underline-none">Install Instructions</a>
+                <a href="#pricing" class="text-secondary-hover link-underline-none">Licensing</a>
+            </div>
+            <p class="mb-0 text-muted">&copy; 2026 Dev Cockpit App. All rights reserved. Self-distributed and maintained.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
